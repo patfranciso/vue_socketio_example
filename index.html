@@ -2,10 +2,23 @@
 <html>
 <head>
 	<title>Nodejs Play</title>
+    <style>
+        *{margin: 0; padding: 0; box-sizing: border-box;}
+        body{ font: 13px Helvetica, Arial; }
+        form{ background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+        form input{border: 0; padding: 10px;	width: 90%; margin-right: .5%;}
+        form button{ width: 9%; background: rgb(66,69,226); border: none; color:white; padding: 10px; }
+        #messages {list-style-type: none; margin: 0; padding: 0;}
+        #messages li{padding: 5px 10px;}
+        #messages li:nth-child(odd){background: #eee;}
+    </style>
 </head>
 <body>
 	<div>Hello</div>
     <div id="chat">
+        <ul id="messages">
+            <li v-for="message in messages">{{ message }}</li>
+        </ul>
 		<form @submit="send">
 			<input type="text" name="message" v-model="message">
 			<button>Send</button>
@@ -15,11 +28,19 @@
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"> </script>
 <script type="text/javascript">
-    var socket = io()
-    new Vue({
+    var socket = io("ws://localhost:3000");
+    const that = new Vue({
         el: '#chat',
         data:{
-            message: ''
+            message: '',
+            messages: []
+        },
+        created: function(){
+            socket.on('chat.message', function(message){
+                console.log('Client Received a message: '+ message)
+                console.log({messages: that.messages})
+                that.messages.push(message)
+            })
         },
         methods:{
             send: function(e){

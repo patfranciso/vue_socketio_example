@@ -3,7 +3,7 @@ const server = require('http').createServer(app);
 var io = require('socket.io')(server)
 
 
-server.listen(3000, ()=>console.log("Listening on port 3000"))	// to log add a labda
+server.listen(3000, ()=>console.log("Listening on port 3000"))	// to log add a lambda
 
 app.get('/', function(request, response){
 	response.sendFile(__dirname + '/index.html')
@@ -12,6 +12,7 @@ app.get('/', function(request, response){
 io.on('connection', function(socket){
 	console.log('A connection was made ')
     socket.on('chat.message', function(message){
-		console.log('New message: ' + message)
+		console.log('Server received message: ' + message)
+		io.emit('chat.message', message)
 	})
 })
