@@ -14,5 +14,10 @@ io.on('connection', function(socket){
     socket.on('chat.message', function(message){
 		console.log('Server received message: ' + message)
 		io.emit('chat.message', message)
-	})
+	});
+    socket.on('disconnect', function(){
+        const msg = 'User has disconnected.';
+        console.log({msg});
+        io.emit('chat.message', msg);
+    });
 })
