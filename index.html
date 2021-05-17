@@ -5,9 +5,30 @@
 </head>
 <body>
 	<div>Hello</div>
+    <div id="chat">
+		<form @submit="send">
+			<input type="text" name="message" v-model="message">
+			<button>Send</button>
+		</form>
+	</div>
 </body>
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"> </script>
 <script type="text/javascript">
     var socket = io()
+    new Vue({
+        el: '#chat',
+        data:{
+            message: ''
+        },
+        methods:{
+            send: function(e){
+                console.log(this.message)
+                socket.emit('chat.message', this.message)
+                this.message = ''
+                e.preventDefault()
+            }
+        }
+    })
 </script>
 </html>
