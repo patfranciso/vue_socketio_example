@@ -29,6 +29,11 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"> </script>
 <script type="text/javascript">
     var socket = io("ws://localhost:3000");
+    var Event = new Vue();
+    socket.on('chat.message', function(message){
+        console.log('Client Received a message: '+ message)
+        Event.$emit('chat.message', message);
+    })
     const that = new Vue({
         el: '#chat',
         data:{
@@ -36,7 +41,7 @@
             messages: []
         },
         created: function(){
-            socket.on('chat.message', function(message){
+            Event.$on('chat.message', function(message){
                 console.log('Client Received a message: '+ message)
                 console.log({messages: that.messages})
                 that.messages.push(message)
